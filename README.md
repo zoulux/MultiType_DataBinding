@@ -5,7 +5,7 @@ you can use :
 
 ```java
 dependencies {
-   compile 'com.github.zoulux:multitype_databinding:1.0.0'
+   compile 'com.github.zoulux:multitype_databinding:1.0.1'
 }
 ```
 
