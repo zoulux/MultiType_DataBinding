@@ -11,18 +11,16 @@ import android.support.v7.widget.RecyclerView;
  * <b>Author:</b> zou<br>
  * <b>Description:</b> <br>
  */
-abstract public class CommonHolder<T> extends RecyclerView.ViewHolder {
+ public class CommonHolder<T> extends RecyclerView.ViewHolder {
     public CommonObservable<T> vm;
     protected Context context;
 
-    public CommonHolder(ViewDataBinding binding) {
+    public CommonHolder(ViewDataBinding binding, CommonObservable<T> vm) {
         super(binding.getRoot());
         this.context = binding.getRoot().getContext();
-        vm = onCreateViewModule();
+        this.vm = vm;
         binding.setVariable(com.zoulux.multitype_databinding.BR.module, vm);
     }
-
-    abstract protected CommonObservable onCreateViewModule();
 
     public void bindData(T t) {
         vm.setData(t);

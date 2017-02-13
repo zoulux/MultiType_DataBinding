@@ -1,10 +1,13 @@
 package com.zoulux.multitype_databinding;
 
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
+
+import java.lang.reflect.InvocationTargetException;
 
 import me.drakeet.multitype.ItemViewProvider;
 
@@ -14,21 +17,32 @@ import me.drakeet.multitype.ItemViewProvider;
  * <b>Author:</b> zou<br>
  * <b>Description:</b> <br>
  */
-public abstract class CommonViewProvider<T> extends ItemViewProvider<T, CommonHolder<T>> {
+public class CommonViewProvider<T> extends ItemViewProvider<T, CommonHolder<T>> {
     private int layoutId;
+    private Class<CommonObservable> vmClazz;
 
-    public CommonViewProvider(int layoutId) {
+    public CommonViewProvider(int layoutId, Class<CommonObservable> vmClazz) {
         this.layoutId = layoutId;
+        this.vmClazz = vmClazz;
     }
 
     @NonNull
     @Override
     protected CommonHolder<T> onCreateViewHolder(@NonNull LayoutInflater inflater, @NonNull ViewGroup parent) {
         ViewDataBinding binding = DataBindingUtil.inflate(inflater, this.layoutId, parent, false);
-        return onCreateViewHolder(binding);
+        try {
+            return new CommonHolder(binding, vmClazz.getConstructor(Context.class).newInstance(parent.getContext()));
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
-
-    abstract protected CommonHolder<T> onCreateViewHolder(ViewDataBinding binding);
 
     @Override
     protected void onBindViewHolder(@NonNull CommonHolder<T> holder, @NonNull T t) {
